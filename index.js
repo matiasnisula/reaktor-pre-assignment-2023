@@ -1,4 +1,5 @@
 const http = require("http");
+const { Server } = require("socket.io");
 const path = require("path");
 const fs = require("fs");
 
@@ -19,6 +20,14 @@ const sendPilots = async () => {
     console.log("sending pilots..");
     io.sockets.emit("pilotUpdate", JSON.stringify(Array.from(violatedPilots)));
     setIsUpdated(false);
+  }
+};
+
+const clearIntervalIfNoSocketsConnected = async () => {
+  const sockets = await io.fetchSockets();
+  if (sockets === undefined || sockets.length === 0) {
+    clearInterval(intervalID);
+    intervalID = null;
   }
 };
 
