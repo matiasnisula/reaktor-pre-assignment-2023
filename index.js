@@ -2,7 +2,25 @@ const http = require("http");
 const path = require("path");
 const fs = require("fs");
 
+const {
+  violatedPilots,
+  fetchAndUpdatePilots,
+  setIsUpdated,
+  getIsUpdated,
+} = require("./services/pilots");
+
 const STATIC_PATH = path.join(process.cwd(), "./build");
+
+let intervalID = null;
+
+const sendPilots = async () => {
+  await fetchAndUpdatePilots();
+  if (getIsUpdated()) {
+    console.log("sending pilots..");
+    io.sockets.emit("pilotUpdate", JSON.stringify(Array.from(violatedPilots)));
+    setIsUpdated(false);
+  }
+};
 
 const server = http.createServer(async (request, response) => {
   const { url } = request;
@@ -28,6 +46,24 @@ const server = http.createServer(async (request, response) => {
     response.statusCode = 404;
     response.end();
   }
+});
+
+const io = new Server(server, {
+  cors: {
+    origin: true,
+    methods: ["OPTIONS", "GET"],
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("user connected");
+  if (!intervalID) {
+    intervalID = setInterval(sendPilots, 5000);
+  }
+  socket.on("disconnect", async () => {
+    await clearIntervalIfNoSocketsConnected();
+    console.log("A user disconnected");
+  });
 });
 
 const PORT = process.env.PORT || 3001;
