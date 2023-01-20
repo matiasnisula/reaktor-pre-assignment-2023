@@ -6,12 +6,17 @@ const violatedPilots = new Map();
 const dronesUrl = "https://assignments.reaktor.com/birdnest/drones";
 const pilotsUrl = "https://assignments.reaktor.com/birdnest/pilots";
 let isUpdated = false;
+let closestDistance = 10000000;
 
 const setIsUpdated = (value) => {
   isUpdated = value;
 };
 const getIsUpdated = () => {
   return isUpdated;
+};
+
+const getClosestDistance = () => {
+  return closestDistance;
 };
 
 /*
@@ -33,6 +38,9 @@ const checkViolation = (positionX, positionY) => {
   );
   if (droneDistance < radius) {
     violation = true;
+  }
+  if (droneDistance < closestDistance) {
+    closestDistance = droneDistance;
   }
   return violation;
 };
@@ -84,4 +92,5 @@ module.exports = {
   violatedPilots,
   setIsUpdated,
   getIsUpdated,
+  getClosestDistance,
 };

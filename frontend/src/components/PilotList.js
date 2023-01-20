@@ -5,7 +5,6 @@ const PilotList = ({ pilotList }) => {
     <table>
       <thead>
         <tr>
-          <th>Pilot ID</th>
           <th>First name</th>
           <th>Last name</th>
           <th>Phone number</th>

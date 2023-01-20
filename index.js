@@ -8,6 +8,7 @@ const {
   fetchAndUpdatePilots,
   setIsUpdated,
   getIsUpdated,
+  getClosestDistance,
 } = require("./services/pilots");
 
 const STATIC_PATH = path.join(process.cwd(), "./build");
@@ -19,6 +20,7 @@ const sendPilots = async () => {
   if (getIsUpdated()) {
     console.log("sending pilots..");
     io.sockets.emit("pilotUpdate", JSON.stringify(Array.from(violatedPilots)));
+    io.sockets.emit("closestDistance", Math.floor(getClosestDistance()));
     setIsUpdated(false);
   }
 };
@@ -67,7 +69,7 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("user connected");
   if (!intervalID) {
-    intervalID = setInterval(sendPilots, 5000);
+    intervalID = setInterval(sendPilots, 2000);
   }
   socket.on("disconnect", async () => {
     await clearIntervalIfNoSocketsConnected();
