@@ -9,7 +9,7 @@ const {
   setIsUpdated,
   getIsUpdated,
   getClosestDistance,
-} = require("./services/pilots");
+} = require("./pilots");
 
 const STATIC_PATH = path.join(process.cwd(), "./build");
 
