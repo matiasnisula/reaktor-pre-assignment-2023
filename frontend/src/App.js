@@ -21,12 +21,10 @@ const App = () => {
     });
 
     socket.on("pilotUpdate", (data) => {
-      console.log("pilots:", JSON.parse(data));
       setPilotList(JSON.parse(data));
     });
 
     socket.on("closestDistance", (data) => {
-      console.log("closestDistance:", data);
       setClosestDistance(data);
     });
 
@@ -43,7 +41,7 @@ const App = () => {
       <h1>Pilots violated no drone zone</h1>
       <PilotList pilotList={pilotList} />
       <div>
-        <p>Closest distance: {closestDistance}</p>
+        <p>Closest distance (m): {closestDistance}</p>
       </div>
       <div>
         <p>Connected: {"" + isConnected}</p>

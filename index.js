@@ -20,7 +20,7 @@ const sendPilots = async () => {
   if (getIsUpdated()) {
     console.log("sending pilots..");
     io.sockets.emit("pilotUpdate", JSON.stringify(Array.from(violatedPilots)));
-    io.sockets.emit("closestDistance", Math.floor(getClosestDistance()));
+    io.sockets.emit("closestDistance", Math.floor(getClosestDistance() / 1000));
     setIsUpdated(false);
   }
 };
